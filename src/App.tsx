@@ -1,30 +1,39 @@
 import styles from './App.module.scss';
 import ViteSvg from './assets/vite.svg';
 import TypescriptSvg from './assets/typescript.svg';
+import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
+import { MainPageComponent } from './components/main-page-component/main-page-component';
+import MainPage from './pages/MainPage';
+
+import { TonConnectUIProvider } from '@tonconnect/ui-react';
+import { LoginComponent } from './components/login-component/login-component';
+
+const LoginPageWithButton = () => {
+    const navigate = useNavigate();
+
+    const handleButtonClick = () => {
+        navigate('/main');
+    };
+
+    return (
+        <div>
+            <TonConnectUIProvider manifestUrl="https://gist.githubusercontent.com/ikustow/cb642b537e3ea0fab51527a60a8a895a/raw/b78a6d3a27fd4ab15d902e907d293b0944280221/gistfile1.txt">
+                <LoginComponent />
+            </TonConnectUIProvider>
+            <button onClick={handleButtonClick}>Go to Main Page</button>
+        </div>
+    );
+};
 
 function App() {
     return (
-        <div className={styles.App}>
-            <h2>Welcome to your App Component 🎉</h2>
-            <span>
-                Double click to edit App component
-                <br />
-                &amp; drag here elements from + Add <b>Elements</b> Panel
-            </span>
-            <p
-                style={{
-                    fontSize: '12px',
-                    marginTop: '80px',
-                    display: 'flex',
-                    gap: '3px',
-                    justifyContent: 'center',
-                }}
-            >
-                This project is using <img src={ViteSvg} width="12" />+
-                <img src={TypescriptSvg} width="12" />
-                Visit vitejs.dev to learn more.
-            </p>
-        </div>
+        <BrowserRouter>
+            
+            <Routes>
+                <Route path="/" element={<LoginPageWithButton />} />
+                <Route path="main" element={<MainPageComponent />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
