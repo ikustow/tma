@@ -1,39 +1,63 @@
+import classNames from 'classnames';
+import { TonConnectButton, TonConnectUIProvider, useTonWallet } from '@tonconnect/ui-react';
+import React, { useEffect, useState } from 'react';
 import styles from './App.module.scss';
-import ViteSvg from './assets/vite.svg';
-import TypescriptSvg from './assets/typescript.svg';
-import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
-import { MainPageComponent } from './components/main-page-component/main-page-component';
-import MainPage from './pages/MainPage';
+import { useTonConnectUI } from '@tonconnect/ui-react';
+import { useNavigate } from 'react-router-dom';
+import tonValues from './consts/ton-values';
+import { TonWallet } from './components/ton-wallet/ton-wallet';
+const manifestUrlValue = tonValues.manifestUrl;
 
-import { TonConnectUIProvider } from '@tonconnect/ui-react';
-import { LoginComponent } from './components/login-component/login-component';
-
-const LoginPageWithButton = () => {
-    const navigate = useNavigate();
-
-    const handleButtonClick = () => {
-        navigate('/main');
-    };
-
+const MainBoard = () => {
     return (
         <div>
-            <TonConnectUIProvider manifestUrl="https://gist.githubusercontent.com/ikustow/cb642b537e3ea0fab51527a60a8a895a/raw/b78a6d3a27fd4ab15d902e907d293b0944280221/gistfile1.txt">
-                <LoginComponent />
+            <TonConnectUIProvider manifestUrl={manifestUrlValue}>
+                <TonConnectButton />
+                <h5>Promiser</h5>
+                  <TonWallet />
             </TonConnectUIProvider>
-            <button onClick={handleButtonClick}>Go to Main Page</button>
+        </div>
+    );
+};
+
+const AlternativeComponent = () => {
+    return (
+        <div>
+            <TonConnectUIProvider manifestUrl={manifestUrlValue}>
+                <TonConnectButton />
+                <h5>Promiser2 </h5>
+            </TonConnectUIProvider>
         </div>
     );
 };
 
 function App() {
+    const wallet = useTonWallet();
+    const [tonConnectUI] = useTonConnectUI();
+    const [showMainBoard, setShowMainBoard] = useState(false);
+
+    useEffect(
+        () =>
+            tonConnectUI.onStatusChange((wallet) => {
+                if (wallet == null) {
+                    setShowMainBoard(false);
+                } else {
+                    setShowMainBoard(true);
+                }
+            }),
+        [],
+    );
+
     return (
-        <BrowserRouter>
-            
-            <Routes>
-                <Route path="/" element={<LoginPageWithButton />} />
-                <Route path="main" element={<MainPageComponent />} />
-            </Routes>
-        </BrowserRouter>
+        <div className={styles.mainDiv}>
+          
+            <header className={styles.header}></header>
+            <main className={styles.mainContent}>
+                <section className={styles.section}>
+                    {showMainBoard ? <MainBoard /> : <AlternativeComponent />}
+                </section>
+            </main>
+        </div>
     );
 }
 
