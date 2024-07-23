@@ -2,6 +2,7 @@ import { createBoard } from '@wixc3/react-board';
 import App from '../../../App';
 import { TonConnectUIProvider } from '@tonconnect/ui-react';
 import tonValues from '../../../consts/ton-values';
+import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
 
 const manifestUrlValue = tonValues.manifestUrl;
 export default createBoard({
